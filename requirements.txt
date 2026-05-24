@@ -1,0 +1,41 @@
+# Web Framework
+fastapi
+uvicorn
+
+# Database
+sqlalchemy
+pymysql
+alembic
+
+# Auth
+python-jose
+passlib
+bcrypt
+python-dotenv
+
+# ML / Causal
+dowhy
+econml
+causalml
+xgboost
+scikit-learn
+pandas
+numpy
+lightgbm
+
+# LLM / RAG
+langchain
+langchain-openai
+faiss-cpu
+openai
+anthropic
+
+# Optimization
+scikit-optimize
+
+# Utilities
+pydantic
+httpx
+pytest
+
+# To be added as needed...
