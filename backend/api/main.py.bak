@@ -42,13 +42,13 @@ async def health_check():
     })
 
 # ── Routers ───────────────────────────────────────────────────────────────────
-from backend.api.routes import auth
-from backend.api.routes import products
-from backend.api.routes import competitors
-from backend.api.routes import analytics
-from backend.api.routes import pricing
-from backend.api.routes import reports
-from backend.api.routes import admin
+from backend.api.routes import auth          # Commit 13
+from backend.api.routes import products      # Commit 15
+from backend.api.routes import competitors   # Commit 16
+from backend.api.routes import analytics     # Commit 16
+from backend.api.routes import pricing       # Commit 17
+from backend.api.routes import reports       # Commit 17
+from backend.api.routes import admin         # Commit 18
 
 p = settings.API_PREFIX
 

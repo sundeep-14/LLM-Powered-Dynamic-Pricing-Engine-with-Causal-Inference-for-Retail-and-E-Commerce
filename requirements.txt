@@ -2,10 +2,10 @@
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 
-# Database (async PostgreSQL)
+# Database (async MySQL)
 sqlalchemy[asyncio]==2.0.35
-asyncpg==0.29.0
-psycopg2-binary==2.9.9
+aiomysql==0.2.0
+pymysql==1.1.1
 alembic==1.13.2
 
 # Auth & Security

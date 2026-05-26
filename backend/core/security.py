@@ -34,13 +34,13 @@ def _create_token(
         "iat": now,
         "exp": now + expires_delta,
     }
-    return jwt.encode(payload, secret, algorithm=settings.JWT_ALGORITHM)
+    return jwt.encode(payload, secret, algorithm=settings.ALGORITHM)
 
 
 def create_access_token(subject: str) -> str:
     return _create_token(
         subject=subject,
-        secret=settings.JWT_SECRET_KEY,
+        secret=settings.SECRET_KEY,
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
         token_type="access",
     )
@@ -61,7 +61,7 @@ def decode_access_token(token: str) -> Optional[str]:
     """Returns subject (user_id) or None if invalid/expired."""
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         if payload.get("type") != "access":
             return None
@@ -74,7 +74,7 @@ def decode_refresh_token(token: str) -> Optional[str]:
     """Returns subject (user_id) or None if invalid/expired."""
     try:
         payload = jwt.decode(
-            token, settings.JWT_REFRESH_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+            token, settings.JWT_REFRESH_SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         if payload.get("type") != "refresh":
             return None
