@@ -1,0 +1,17 @@
+# Environment variables - contains DB passwords, never push this
+.env
+
+# Python cache files - auto-generated, not needed in repo
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment folder
+venv/
+env/
+
+# VS Code settings
+.vscode/
+
+# Alembic generated cache
+*.pyc
