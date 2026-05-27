@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import HTTPException, status
 from backend.utils.helpers import generate_uuid, utcnow_iso
 from backend.utils.logger import logger
@@ -9,10 +10,6 @@ _pricing_history: list[dict] = []
 class PricingService:
 
     async def get_current_price(self, product_id: str) -> dict:
-        """
-        Returns current price for a product.
-        Will integrate with Bayesian optimizer (pipeline/optimization) in Week 3.
-        """
         return {
             "product_id": product_id,
             "current_price": None,
@@ -20,6 +17,32 @@ class PricingService:
             "strategy": "pending_pipeline_integration",
             "generated_at": utcnow_iso(),
         }
+
+    async def optimize_price(self, product_id: str, data: dict) -> dict:
+        """
+        Runs Bayesian optimization to find the profit-maximizing price.
+        Called from POST /pricing/{product_id}/optimize
+        """
+        from backend.pipeline.optimization.bayesian_optimizer import run_optimization
+
+        logger.info(f"Running price optimization for product_id={product_id}")
+
+        result = run_optimization(
+            product_id=product_id,
+            base_price=data["base_price"],
+            cost_price=data["cost_price"],
+            current_demand=data["current_demand"],
+            price_elasticity=data.get("price_elasticity", -1.5),
+            competitor_avg_price=data.get("competitor_avg_price"),
+            stock=data.get("stock", 100),
+            category=data.get("category", "general"),
+            seasonal_factor=data.get("seasonal_factor", 1.0),
+            min_price=data.get("min_price"),
+            max_price=data.get("max_price"),
+            min_margin_pct=data.get("min_margin_pct", 10.0),
+        )
+        result["optimized_at"] = utcnow_iso()
+        return result
 
     async def set_pricing_rule(self, product_id: str, data: dict, user_id: str) -> dict:
         rule_id = generate_uuid()
@@ -35,7 +58,7 @@ class PricingService:
             "created_at": utcnow_iso(),
         }
         _pricing_rules[product_id] = rule
-        logger.info(f"Pricing rule set for product_id={product_id} strategy={rule['strategy']}")
+        logger.info(f"Pricing rule set for product_id={product_id}")
         return rule
 
     async def get_pricing_rule(self, product_id: str) -> dict:
@@ -48,10 +71,6 @@ class PricingService:
         return rule
 
     async def apply_price(self, product_id: str, price: float, user_id: str) -> dict:
-        """
-        Applies a price to a product and records it in history.
-        Will write to DB in feature/database.
-        """
         entry = {
             "id": generate_uuid(),
             "product_id": product_id,

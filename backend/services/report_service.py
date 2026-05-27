@@ -8,22 +8,36 @@ class ReportService:
 
     async def generate(self, report_type: str, params: dict, user_id: str) -> dict:
         """
-        Generates a report entry.
-        Will call pipeline/rag/report_generator.py in Week 4 (Commit 21).
+        Generates a report using RAG + LLM pipeline.
         """
+        from backend.pipeline.rag.report_generator import report_generator
+        from backend.pipeline.rag.knowledge_base import knowledge_base
+
         report_id = generate_uuid()
+        product_id = params.get("product_id")
+
+        logger.info(f"Generating report: type={report_type} product_id={product_id}")
+
+        # Generate via LLM pipeline
+        result = await report_generator.generate(
+            report_type=report_type,
+            product_id=product_id,
+            extra_context=str(params) if params else None,
+        )
+
         report = {
             "id": report_id,
             "type": report_type,
             "params": params,
-            "status": "pending",
-            "result": None,
+            "status": result["status"],
+            "content": result["content"],
+            "context_used": result["context_used"],
             "requested_by": user_id,
             "created_at": utcnow_iso(),
-            "completed_at": None,
+            "completed_at": utcnow_iso(),
         }
         _reports[report_id] = report
-        logger.info(f"Report requested: type={report_type} id={report_id}")
+        logger.info(f"Report completed: id={report_id} status={result['status']}")
         return report
 
     async def get_report(self, report_id: str) -> dict:

@@ -27,3 +27,14 @@ email-validator==2.2.0
 # Testing
 pytest==8.3.3
 pytest-asyncio==0.24.0
+
+# Bayesian Optimization (Week 3)
+scikit-optimize==0.10.2
+numpy==1.26.4
+scipy==1.13.1
+
+# RAG + LLM (Week 4)
+chromadb==0.5.3
+sentence-transformers==3.0.1
+openai==1.40.0
+anthropic==0.34.0
